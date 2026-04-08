@@ -69,7 +69,7 @@ save("waveguides.png", fig);
 ```
 
 <div style="text-align: center;">
-    <img src="waveguides.png" alt="Perfil de indice de refração" height="400"/>
+    <img src="waveguides.png" alt="Perfil de indice de refração" width="838"/>
 </div>
 
 $$
@@ -103,7 +103,7 @@ save("heatmaps.png", fig);
 ```
 
 <div style="text-align: center;">
-    <img src="heatmaps.png" alt="Heatmaps dos modos gaussianos" height="400"/>
+    <img src="heatmaps.png" alt="Heatmaps dos modos gaussianos" width="838"/>
 </div>
 
 $$
@@ -193,6 +193,6 @@ end
 
 <div style="text-align: center;">
     <a href="CMT-propagation.mp4">
-        <img src="heatmaps.png" alt="Heatmaps dos modos gaussianos" height="400"/>
+        <img src="heatmaps.png" alt="Heatmaps dos modos gaussianos" width="838"/>
     </a>
 </div>
