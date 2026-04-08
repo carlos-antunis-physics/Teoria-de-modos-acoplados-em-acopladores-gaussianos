@@ -182,7 +182,7 @@ hms = [
     )
 ];
 
-record(fig, "CMT-propagation.mp4", Z; framerate=30) do z
+record(fig, "CMT-propagation.gif", Z; framerate=30) do z
     P = U(z);
     A, B = P * A₀, P * B₀;
 
@@ -192,7 +192,7 @@ end
 ```
 
 <div style="text-align: center;">
-    <a href="CMT-propagation.mp4">
+    <a href="CMT-propagation.gif">
         <img src="heatmaps.png" alt="Heatmaps dos modos gaussianos" width="838"/>
     </a>
 </div>
