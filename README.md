@@ -4,13 +4,17 @@
 
 > #### **Resumo.**
 >
->   Este documento apresenta a teoria de acoplamento de modos (CMT, do inglês *Coupled Mode Theory*)
->   aplicada a guias gaussianos. Revisamos aqui os resultados apresentados ao longo do
->   artigo *Coupled-mode theory for optical waveguides: an overview* da JOSAA
->   ([doi:10.1364/JOSAA.11.000963](https://doi.org/10.1364/JOSAA.11.000963)) onde uma
->   revisão da literatura acerca de CMT aplicada a guias de onda é apresentado.
+> Este documento apresenta a teoria de acoplamento de modos (CMT, do inglês *Coupled Mode Theory*) aplicada a guias gaussianos.
+> Revisamos aqui os resultados apresentados ao longo do artigo *Coupled-mode theory for optical waveguides: an overview* da
+> JOSAA ([doi:10.1364/JOSAA.11.000963](https://doi.org/10.1364/JOSAA.11.000963)) onde uma revisão da literatura acerca de CMT
+> aplicada a guias de onda é apresentado.
 
 </div>
+
+Buscamos, como resultado da análise e simulação efetuada aqui, introduzir o formalismo da Teoria de modos acoplados, doravante citada
+como *CMT*, na descrição da propagação de luz em chips fotônicos - mais especificamente fundamentar a descrição de acopladores direcionais.
+Para tal, escolhemos utilizar os seguintes parâmetros de simulação - comumente observados em chips fotônicos fabricados pela técnica de
+escrita a laser de femtosegundo (*FLDW*, do inglês *Femtosecond laser direct writing*).
 
 ```julia
 using FFTW
@@ -34,10 +38,18 @@ x, y = -15μm:0.1μm:+15μm, -15μm:0.1μm:+15μm;
 Z = 0μm:10μm:10cm;
 ```
 
+Para descrever a propagação da luz nestes chips fotônicos, usualmente empregamos a aproximação paraxial da Equação de Helmholtz - resultado
+do regime monocromático da luz laser somado à variação lenta do envelope de onda. Neste regime, denominado regime paraxial, a propagação da
+luz é análoga à equação de Schrödinger dependente do tempo, tal como ilustrado abaixo
+
 $$
     \imath\cancel\lambda\frac{\partial}{\partial z}\Psi(\mathbf{r}_\perp,z) =
-        \left[-\frac{\cancel\lambda^2}{2 n_0}\nabla_\perp^2 + \Delta n(\mathbf{r}_\perp)\right]\Psi(\mathbf{r}_\perp, z),  
+        \left[-\frac{\cancel\lambda^2}{2 n_0}\nabla_\perp^2 + \Delta{n}(\mathbf{r}_\perp)\right]\Psi(\mathbf{r}_\perp, z),  
 $$
+
+onde $\cancel\lambda = \lambda / 2\pi$, o operador $\nabla_\perp^2$ corresponde ao efeito de difração (calculado numericamente por intermédio 
+de transformada rápida de Fourier - `fft`) e $\Delta{n}$ corresponde ao perfil de índices dos guias escritos (um par de guias gaussianos) como
+ilustrado a seguir.
 
 ```julia
 function ∇²(ψ)
@@ -71,6 +83,9 @@ save("waveguides.png", fig);
 <div style="text-align: center;">
     <img src="waveguides.png" alt="Perfil de indice de refração" width="838"/>
 </div>
+
+Doravante, iremos assumir que existe um conjunto de funções $\Phi_n$ capazes de ser combinadas para produzir o campo em quaisquer configurações
+acessíveis (quaisquer estado de luz válido) - em nosso caso sendo o conjundo dos modos gaussianos centrados nos centros de cada guia.
 
 $$
     \Psi(\mathbf{r}_\perp, z) =
@@ -106,20 +121,23 @@ save("heatmaps.png", fig);
     <img src="heatmaps.png" alt="Heatmaps dos modos gaussianos" width="838"/>
 </div>
 
+Dessa maneira, ao substituirmos a expressão para o campo que utilizamos de *ansatze* (forma gourmet de dizer chute), obtemos a seguinte expressão
+
 $$
     \imath\cancel\lambda\sum_n \dot{\mathrm{c}}_n(z)\Phi_n(\mathbf{r}_\perp) =
         \sum_n \mathrm{c}_n(z) \left[-\frac{\cancel\lambda^2}{2 n_0}\nabla_\perp^2 + \Delta n(\mathbf{r}_\perp)\right]\Phi_n(\mathbf{r}_\perp)
 $$
+
+notando que toda a expressão $\left[-\frac{\cancel\lambda^2}{2 n_0}\nabla_\perp^2 + \Delta n(\mathbf{r}_\perp)\right]$ consiste num operador linear,
+podemos assumir que ela apenas "embaralha" as combinações lineares (obteremos a forma com o qual esse embaralho ocorre computacionalmente no futuro),
+ou seja,
 
 $$
     \imath\cancel\lambda \sum_n \dot{\mathrm{c}}_n(z)\Phi_n(\mathbf{r}_\perp) =
         \sum_n \mathrm{c}_n(z) \sum_m \beta_n^{(m)}\Phi_m(\mathbf{r}_\perp),
 $$
 
-$$
-    \imath\cancel\lambda \sum_m \dot{\mathrm{c}}_m(z)\Phi_n(\mathbf{r}_\perp) =
-        \sum_m \left(\sum_n \beta_n^{(m)}\mathrm{c}_n(z)\right)\Phi_m(\mathbf{r}_\perp),
-$$
+dessa forma, ao aplicar o produto interno $\langle\Phi_i, \ast\rangle$ do espaço vetorial das funções podemos filtrar cada modo $\Phi_i$,
 
 ```julia
 ⊙(ϕ, ψ) = begin
@@ -142,9 +160,13 @@ B = [
 ];
 ```
 
+de tal maneira que obtemos a equação diferencial matricial,
+
 $$
     \imath\cancel\lambda\mathrm{\hat P}\dot{\mathbf{c}}(z) = \mathrm{\hat B}\mathbf{c}(z),
 $$
+
+a qual pode ser reescrita como, sempre que $\mathrm{\hat P}$ for invertível,
 
 $$
     \imath\cancel\lambda\dot{\mathbf{c}}(z) = \mathrm{\hat P}^{-1}\mathrm{\hat B}\mathbf{c}(z) \equiv \mathrm{\hat H}\mathbf{c}(z),
@@ -153,6 +175,9 @@ $$
 ```julia
 H = inv(P) * B; # H = -0.0024753627979831275 I -2.6614199180474305e-5 Z + 5.3346925506528295e-5 X
 ```
+
+dado que a equação é identica à forma matricial da equação de Schrödinger dependente do tempo com hamiltoniano constante, podemos utilizar a ideia do
+operador evolução temporal para solucioná-la
 
 $$
     \mathbf{c}(z) = \exp\left[-\imath\frac{\mathrm{\hat H}}{\cancel\lambda}z\right]\mathbf{c}(z = 0),
