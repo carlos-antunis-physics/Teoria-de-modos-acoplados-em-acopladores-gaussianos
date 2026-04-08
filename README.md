@@ -151,12 +151,18 @@ $$
 $$
 
 ```julia
-H = inv(P) * B;
+H = inv(P) * B; # H = -0.0024753627979831275 I -2.6614199180474305e-5 Z + 5.3346925506528295e-5 X
 ```
 
 $$
     \mathbf{c}(z) = \exp\left[-\imath\frac{\mathrm{\hat H}}{\cancel\lambda}z\right]\mathbf{c}(z = 0),
 $$
+
+<!--
+$$
+    \mathbf{c}(z) = e^{-i\beta_0\frac{z}{\cancel\lambda}}\exp\left[-\imath\frac{u_x \hat \sigma_x + u_z \hat \sigma_z}{\cancel\lambda}z\right]\mathbf{c}(z = 0),
+$$
+-->
 
 ```julia
 U(z) = exp(-1im * H * z / λ_not);
