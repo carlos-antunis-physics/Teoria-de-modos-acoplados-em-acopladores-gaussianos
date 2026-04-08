@@ -118,7 +118,7 @@ hms = [
     )
 ];
 
-record(fig, "CMT-propagation.mp4", Z; framerate=30) do z
+record(fig, "CMT-propagation.gif", Z; framerate=30) do z
     P = U(z);
     A, B = P * A₀, P * B₀;
 
