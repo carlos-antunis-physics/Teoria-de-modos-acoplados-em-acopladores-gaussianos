@@ -223,5 +223,5 @@ end
 ```
 
 <div style="text-align: center;">
-        <img src="heatmaps.gif" alt="Heatmaps dos modos gaussianos" width="838"/>
+        <img src="CMT-propagation.gif" alt="Heatmaps dos modos gaussianos" width="838"/>
 </div>
