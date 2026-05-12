@@ -223,7 +223,5 @@ end
 ```
 
 <div style="text-align: center;">
-    <a href="CMT-propagation.gif">
-        <img src="heatmaps.png" alt="Heatmaps dos modos gaussianos" width="838"/>
-    </a>
+        <img src="heatmaps.gif" alt="Heatmaps dos modos gaussianos" width="838"/>
 </div>
